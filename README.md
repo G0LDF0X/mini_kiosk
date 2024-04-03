@@ -4,6 +4,10 @@
 
 DB는 음료 데이터를 담고 있는 ``Menu``와 주문 데이터를 담고 있는 ``Order``, 그리고 손님 데이터를 담고 있는 ``Customer``로 이루어져 있다.
 
+## 관계도
+![img](관계도.png)
+
+
 ## Menu
 
 ``Menu`` 테이블은 ``menu_name``, ``menu_price``, ``menu_category`` 컬럼으로 이루어져 있다.
