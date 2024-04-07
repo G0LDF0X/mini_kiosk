@@ -1,0 +1,11 @@
+<h1> Cafe Lion 메뉴판</h1>
+
+
+<ul>
+    {% for menu in menu_list %}
+    <li>[{{menu.menu_category}}] {{menu.menu_name}} : {{menu.menu_price}}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'kiosk:menu_order' %}">주문 하기</a>
+<a href="{% url 'kiosk:index' %}">뒤로 가기</a>

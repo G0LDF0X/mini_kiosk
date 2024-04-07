@@ -1,0 +1,10 @@
+<h1> Cafe Lion 메뉴판</h1>
+
+
+<ul>
+    {% for menu in menu_list %}
+    <li>[{{menu.menu_category}}] {{menu.menu_name}} : {{menu.menu_price}}</li>
+    {% endfor %}
+</ul>
+
+<h3>주문할 메뉴를 입력해주세요.</h3>

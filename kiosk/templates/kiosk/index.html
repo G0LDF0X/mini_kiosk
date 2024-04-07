@@ -1,0 +1,16 @@
+<h1> Cafe Lion 미니 키오스크</h1>
+
+어서오세요, {{object.0.customer_name}}님. <br>
+현재 주문 타입 : {{object.0.order_type}}<br>
+
+<br>
+다음 중 원하시는 메뉴를 선택해주세요.
+<br><br>
+
+<a href="{% url 'kiosk:menu' %}">1. 메뉴 확인 및 주문하기</a><br><br>
+
+<a href="">2. 주문 번호를 이용해 영수증 출력하기</a><br><br>
+
+<a href="">3. 지난 주문보기</a><br><br>
+
+<a href="">4. 주문 방법 변경</a>

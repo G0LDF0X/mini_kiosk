@@ -23,3 +23,8 @@ class Order(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     order_date = models.DateTimeField("order_date")
+
+class Current_Customer(models.Model):
+    customer_name = models.CharField(max_length=200)
+    order_type = models.CharField(max_length=200)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
