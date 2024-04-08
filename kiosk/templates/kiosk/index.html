@@ -1,16 +1,28 @@
-<h1> Cafe Lion 미니 키오스크</h1>
+{% extends 'base.html' %}
 
-어서오세요, {{object.0.customer_name}}님. <br>
-현재 주문 타입 : {{object.0.order_type}}<br>
+{% load static %}
 
+{% block title %}Index{% endblock %}
+
+{% block extra-style %}
+<style type="text/css">
+    h1 {
+        text-align: center;
+        color: #1e1d20;
+        margin-bottom: 30px;
+    }
+</style>
+{% endblock%}
+
+{% block content %}
 <br>
-다음 중 원하시는 메뉴를 선택해주세요.
-<br><br>
+<h1> Cafe Lion 미니 키오스크</h1>
+<br>
+<div class="d-grid gap-2 col-6 mx-auto">
+    <a href="{% url 'kiosk:menu' %}" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">1. 메뉴 확인 및 주문하기</a>
+    <a href="{% url 'kiosk:receipt' %}" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">2. 현재 주문번호 및 영수증 확인하기</a>
+    <a href="#" class="btn btn-dark disabled" tabindex="-1" role="button" aria-disabled="true">3. 지난 주문보기</a>
 
-<a href="{% url 'kiosk:menu' %}">1. 메뉴 확인 및 주문하기</a><br><br>
+</div>
 
-<a href="">2. 주문 번호를 이용해 영수증 출력하기</a><br><br>
-
-<a href="">3. 지난 주문보기</a><br><br>
-
-<a href="">4. 주문 방법 변경</a>
+{% endblock %}

@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from config.views import HomeView
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path("", HomeView.as_view(), name="Home"),
+    path("", auth_views.LoginView.as_view(template_name="home.html"), name="Home"),
     path('admin/', admin.site.urls),
     path("kiosk/", include("kiosk.urls")),
 ]

@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
+{% load custom_filters %}
 {% load static %}
 
-{% block title %}Order{% endblock %}
+{% block title %}Receipt{% endblock %}
 
 {% block extra-style %}
 <style type="text/css">
@@ -24,14 +25,14 @@
 
 {% block content %}
     <br>
-    <h1>현재 주문 목록</h1>
+    <h1>영수증</h1>
     <br>
-    <p>현재 주문 목록은 다음과 같습니다.</p>
+    <p>현재 주문번호는 {{ max_order_id }}번이며, 주문 영수증은 다음과 같습니다.</p>
     <ul style="border: 2px solid #1e1d20; border-radius: 15px; padding: 20px; list-style-type: none; width: 50%; margin: 0 auto;">
         {% for menu in menus%}
             {% for cart_item in cart_items %}
             {% if cart_item.menu_id == menu.id %}
-                <li>{{ menu.menu_name }} : {{ cart_item.menu_count }}</li>
+                <li style="text-align: center;">{{ menu.menu_name }}({{menu.menu_price}}원) * {{ cart_item.menu_count }} = {{ cart_item.menu_count|mul:menu.menu_price }}원</li>
             {% endif %}
             {% endfor %}
         {% endfor %}
@@ -42,8 +43,6 @@
     <p>총 {{total_sum}}원</p>
 
     <br><br>
-    <p>
-    <a href="{% url 'kiosk:menu' %}" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">《-- 더 주문하기</a><br><br>
-    <a href="{% url 'kiosk:receipt' %}" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true">주문서 출력하기 --》</a></p>
+    <p><a href="{% url 'kiosk:index' %}" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">Index로 돌아가기</a></p><br><br>
 
-{% endblock%}
+{% endblock %}

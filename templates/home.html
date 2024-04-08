@@ -1,13 +1,94 @@
-<h1> Cafe Lion에 오신 걸 환영합니다!</h1>
-<h3>키오스크 구현 미니 프로젝트</h3>
-<h4>박찬미</h4>
+{% extends 'base.html' %}
 
-<br>
-다음 중 원하시는 메뉴를 선택해주세요.
-<br><br>
+{% load static %}
 
-<a href="{% url 'kiosk:menu' %}">1. 메뉴 확인 및 주문하기</a><br><br>
+{% block title %}Home{% endblock %}
 
-<a href="">2. 주문 번호를 이용해 영수증 출력하기</a><br><br>
+{% block extra-style %}
+<style type="text/css">
+    .home-image {
+        background-image: url("https://img.freepik.com/premium-photo/humanistic-lion-suit-drinking-coffe-coffee-shop_153325-1405.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        height: 500px;
+        border-top: 10px solid #000000;
+        border-bottom: 10px solid #000000;
+        padding: 20px 0 0 20px;
+        margin-top: 10px;
+    }
+    .title {
+        color: rgb(255, 255, 255);
+        font-size: 100pt;
+        font-family:'Times New Roman', Times, serif;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px #000000;
+    }
+    .content-section {
+        padding: 40px 0;
+    }
+    .content-title {
+        font-size: 24pt;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .content-text {
+        font-size: 16pt;
+    }
+    footer {
+        background-color: #1e1d20;
+        color: #ffffff;
+        padding: 10px 0;
+        text-align: center;
+    }
+</style>
+{% endblock%}
 
-<a href="">3. 지난 주문보기</a>
+{% block content %}
+<div class="home-image">
+    <h2 class="title">Cafe Lion</h2>
+</div>
+
+<div class="container content-section">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            <h3 class="content-title">Enjoy your time.</h3>
+            <p class="content-text">Cafe Lion has Coffee, Tea, Ade, Frappe, Cake, and Salad.
+            Enjoy the cafe more than 20 menus and have a wonderful time.
+            </p>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer%}
+<footer class="fixed-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h4>Contact Us</h4>
+                <p>123 Cafe Lion Street, Seoul, South Korea</p>
+                <p>Email: info@cafelion.com</p>
+                <p>Phone: +82-2-1234-5678</p>
+            </div>
+            <div class="col-md-4">
+                <h4>Follow Us</h4>
+                <p>Stay connected with us on social media for the latest updates and offers.</p>
+                <p>
+                    <a href="#" class="social-icon">Facebook</a>
+                    <a href="#" class="social-icon">Instagram</a>
+                    <a href="#" class="social-icon">Twitter</a>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h4>Quick Links</h4>
+                <p><a href="#">Menu</a></p>
+                <p><a href="#">About Us</a></p>
+                <p><a href="#">Contact</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}

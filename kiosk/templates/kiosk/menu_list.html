@@ -1,11 +1,38 @@
-<h1> Cafe Lion 메뉴판</h1>
+{% extends 'base.html' %}
 
+{% load static %}
 
-<ul>
-    {% for menu in menu_list %}
-    <li>[{{menu.menu_category}}] {{menu.menu_name}} : {{menu.menu_price}}</li>
-    {% endfor %}
-</ul>
+{% block title %}Menu & Order{% endblock %}
 
-<a href="{% url 'kiosk:menu_order' %}">주문 하기</a>
-<a href="{% url 'kiosk:index' %}">뒤로 가기</a>
+{% block extra-style %}
+<style type="text/css">
+    h1 {
+        text-align: center;
+        color: #1e1d20;
+        margin-bottom: 30px;
+    }
+</style>
+{% endblock%}
+
+{% block content %}
+<br>
+<h1>Cafe Lion 메뉴</h1>
+<br>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+{% for menu_item in menu_items %}
+    <div class="card m-2" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{menu_item.menu_name}}</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">{{menu_item.menu_category}}</h6>
+          <p class="card-text">{{menu_item.menu_price}}원</p>
+        <form action="{% url 'kiosk:menu_order' menu_item.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="menu_id" value="{{ menu_item.id }}">
+            <input type="submit" value="선택">
+        </form>
+        </div>
+      </div>
+{% endfor %}
+</div>
+
+{% endblock %}
