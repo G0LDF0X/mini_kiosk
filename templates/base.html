@@ -23,13 +23,13 @@
                   <a class="nav-link active" aria-current="page" href="{% url 'kiosk:index' %}">Cafe Index</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{% url 'kiosk:menu' %}">Menu/Order</a>
+                  <a class="nav-link active" aria-current="page" href="{% url 'kiosk:menu_category' 1 %}">Menu/Order</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="{% url 'kiosk:receipt' %}">Receipt</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Photo</a>
+                  <a class="nav-link active" aria-current="page" href="{% url 'kiosk:add_menu' %}">Add Menu</a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -42,10 +42,34 @@
                   </ul>
                 </li>
               </ul>
-              <form class="d-flex" role="search">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    {% if user.is_active %}
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle"></i>&nbsp;{% firstof user.get_short_name user.get_username %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item">Logout</button>
+                        </form>
+                        <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
+                    </ul>
+                    {% else %}
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarAnonymousDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle"></i>&nbsp;Anonymous
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarAnonymousDropdown">
+                        <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                        <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                    </ul>
+                    {% endif %}
+                </li>
+            </ul>
+              <!-- <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
+              </form> -->
             </div>
           </div>
       </nav>    

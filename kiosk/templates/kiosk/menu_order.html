@@ -31,7 +31,7 @@
         {% for menu in menus%}
             {% for cart_item in cart_items %}
             {% if cart_item.menu_id == menu.id %}
-                <li>{{ menu.menu_name }} : {{ cart_item.menu_count }}</li>
+                <li>{{ menu.menu_name }}({{menu.menu_price}}원) : {{ cart_item.menu_count }}</li>
             {% endif %}
             {% endfor %}
         {% endfor %}
@@ -41,9 +41,36 @@
     <h3>현재 금액 합계 : </h3>
     <p>총 {{total_sum}}원</p>
 
-    <br><br>
-    <p>
-    <a href="{% url 'kiosk:menu' %}" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">《-- 더 주문하기</a><br><br>
+<br><h3>결제 방법</h3>
+<div class="container d-flex justify-content-center">
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="payment" id="pay_card">
+    <label class="form-check-label" for="pay_card">카드로 결제</label>
+  </div>
+</div>
+<div class="container d-flex justify-content-center">
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="payment" id="pay_cash">
+    <label class="form-check-label" for="pay_cash">현금으로 결제</label>
+  </div>
+</div>
+
+<br><br><h3>식사 방법</h3>
+<div class="container d-flex justify-content-center">
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="eating" id="shop">
+    <label class="form-check-label" for="shop">매장에서</label>
+  </div>
+</div>
+<div class="container d-flex justify-content-center">
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="eating" id="takeout">
+    <label class="form-check-label" for="takeout">테이크아웃</label>
+  </div>
+</div>
+
+    <p><br><br>
+    <a href="{% url 'kiosk:menu_category' 1 %}" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">《-- 더 주문하기</a><br><br>
     <a href="{% url 'kiosk:receipt' %}" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true">주문서 출력하기 --》</a></p>
 
 {% endblock%}

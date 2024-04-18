@@ -1,13 +1,16 @@
 from django.db import models
 
 # Create your models here.
+class Category(models.Model):
+    category_name = models.CharField(default="None", max_length=200)
+    def __str__(self):
+        return self.category_name
 
 # 음료의 이름, 가격이 적힌 테이블
 class Menu(models.Model):
     menu_name = models.CharField(max_length=200)
     menu_price = models.IntegerField()
-    menu_category = models.CharField(default="None", max_length=200) 
-
+    menu_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     def __str__(self):
         return self.menu_name
     
@@ -28,3 +31,4 @@ class Current_Order(models.Model):
 
     def __str__(self):
         return self.menu.menu_name
+    

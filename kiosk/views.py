@@ -1,37 +1,50 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.views.generic import ListView, DetailView, DayArchiveView
-from kiosk.models import Menu, Order, Current_Order
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DayArchiveView
+from kiosk.models import Menu, Order, Current_Order, Category
 from django.utils import timezone
-from django.urls import reverse_lazy
 from django.db.models import F
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 from django.db.models import Max
+from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 
 def Index(request):
     context = {"status": "OK"}
     return render(request, "kiosk/index.html", context)
 
-def get_menu(request):
-    menu_items = Menu.objects.all().order_by("-menu_category")
-    return render(request, "kiosk/menu_list.html", {"menu_items": menu_items})
+def get_menu_category(request, pk):
+    if request.method == 'GET':
+        all_category = Category.objects.all()
+        get_category_items = Menu.objects.filter(menu_category=pk)
+        order_items = Current_Order.objects.all()
+        menus = Menu.objects.all()
+        total_sum = 0
+        for order in order_items:
+            total_sum += order.menu.menu_price * order.menu_count
+        context = {
+            "categories": all_category,
+            "category_items": get_category_items,
+            "order_items": order_items,
+            "menus": menus,
+            "current_page": pk,
+            "total_sum": total_sum,
+        }
+        return render(request, "kiosk/menu_list.html", context)
+    elif request.method == 'POST':
+        menu_id = request.POST['menu_id']
+        menu, created = Current_Order.objects.get_or_create(menu_id=menu_id, defaults={"menu_count": 0, "order_date": timezone.now()},)
+        if not created:
+            menu.menu_count = F("menu_count") + 1
+        else:
+            menu.menu_count = 1
+        menu.save()
+        return redirect('kiosk:menu_category', pk=pk)
 
-@csrf_exempt
-@require_POST
-def show_cart(request, menu_id):
-    menu, created = Current_Order.objects.get_or_create(menu_id=menu_id, defaults={"menu_count": 0, "order_date": timezone.now()},)
+def show_cart(request):
 
-    if not created:
-        menu.menu_count = F("menu_count") + 1
-    else:
-        menu.menu_count = 1
-
-    menu.save()
     cart_items = Current_Order.objects.all()
     menus = Menu.objects.all()
     total_sum = sum(menu.menu_price * order.menu_count for menu in menus for order in menu.current_order_set.all())
-    context = {"cart_items": cart_items, "menu_id": menu_id, "menus": menus, "total_sum": total_sum}
+    context = {"cart_items": cart_items, "menus": menus, "total_sum": total_sum}
     return render(request, "kiosk/menu_order.html", context)
 
 def show_receipt(request):
@@ -70,6 +83,30 @@ def show_receipt(request):
     total_sum = sum(menu.menu_price * order_dict[menu.id]["menu_count"] for menu in menus if menu.id in order_dict)
     context = {"cart_items": cart_items, "menus": menus, "total_sum": total_sum, "max_order_id": max_order_id}
     return render(request, "kiosk/receipt_list.html", context)
+
+@login_required
+def add_menu(request):
+    if request.method == 'GET':
+        return render(request, 'kiosk/add_menu.html')
+    elif request.method == 'POST':
+        menu_name = request.POST['name']
+        menu_price = request.POST['price']
+        menu_category = request.POST['category']
+
+        Menu.objects.create(menu_name=menu_name, menu_price=menu_price, menu_category_id=menu_category)
+        return redirect('kiosk:menu_category',pk=menu_category)
+
+def detail_menu(request, pk):
+    object = Menu.objects.get(pk=pk)
+    context = {'object': object}
+    return render(request, 'kiosk/menu_detail.html', context)
+
+@login_required(login_url='/login/')
+def delete_menu(request, pk):
+    object = Menu.objects.get(pk=pk)
+    item_id = object.menu_category.id
+    object.delete()
+    return redirect('kiosk:menu_category', pk=item_id)
 
 class ReceiptDAV(DayArchiveView):
     model = Order

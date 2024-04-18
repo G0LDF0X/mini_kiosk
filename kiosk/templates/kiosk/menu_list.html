@@ -6,33 +6,100 @@
 
 {% block extra-style %}
 <style type="text/css">
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        margin-top: 30px;
+    }
+
+    .menu-column {
+        width: 66.66%;
+        padding-right: 20px;
+    }
+
+    .order-column {
+        width: 33.33%;
+        padding-left: 20px;
+        border-left: 1px solid #ccc;
+    }
+
     h1 {
         text-align: center;
         color: #1e1d20;
         margin-bottom: 30px;
     }
+
+    h3 {
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+    }
 </style>
 {% endblock%}
 
 {% block content %}
-<br>
-<h1>Cafe Lion 메뉴</h1>
-<br>
-<div class="row row-cols-1 row-cols-md-3 g-4">
-{% for menu_item in menu_items %}
-    <div class="card m-2" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">{{menu_item.menu_name}}</h5>
-          <h6 class="card-subtitle mb-2 text-body-secondary">{{menu_item.menu_category}}</h6>
-          <p class="card-text">{{menu_item.menu_price}}원</p>
-        <form action="{% url 'kiosk:menu_order' menu_item.id %}" method="post" style="display: inline;">
-            {% csrf_token %}
-            <input type="hidden" name="menu_id" value="{{ menu_item.id }}">
-            <input type="submit" value="선택">
-        </form>
+<div class="container">
+    <div class="menu-column">
+        <h1>Cafe Lion 메뉴</h1>
+        <div>
+        <ul class="nav nav-pills nav-fill" style="margin-bottom: 30px;">
+            {% for category in categories %}
+            {% if category.id == current_page %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'kiosk:menu_category' category.id %}">{{ category.category_name }}</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'kiosk:menu_category' category.id %}">{{ category.category_name }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
         </div>
-      </div>
-{% endfor %}
-</div>
+        <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-start">
+            {% for item in category_items %}
+            <div class="col">
+                <div class="card m-2" style="width: 15rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'kiosk:detail_menu' item.id %}">{{item.menu_name}}</a></h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">{{item.menu_category}}</h6>
+                        <p class="card-text" style="text-align: left;">{{item.menu_price}}원</p>
+                        <form action="" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="menu_id" value="{{ item.id }}">
+                            <input type="submit" class="btn btn-primary" value="선택">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
+    <div class="order-column">
+        <h1>현재 주문 목록</h1>
+        <p>현재 주문 목록은 다음과 같습니다.</p>
+        <ul style="border: 2px solid #1e1d20; border-radius: 15px; padding: 20px; list-style-type: none;">
+            {% for menu in menus%}
+                {% for order in order_items %}
+                {% if order.menu_id == menu.id %}
+            <li>{{ menu.menu_name }}({{menu.menu_price}}원) : {{ order.menu_count }}</li>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </ul>
+        <br>
+        <br>
+        <h3>현재 금액 합계 : </h3>
+        <p>총 {{ total_sum }}원</p>
+        <p>
+            <a href="{% url 'kiosk:index' %}" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">《-- 돌아가기</a><br><br>
+            <a href="{% url 'kiosk:order' %}" class="btn btn-success" tabindex="-1" role="button" aria-disabled="true">결제하기 --》</a><br><br>
+        </p>
+        <br><br>
+    </div>
+</div>
 {% endblock %}
